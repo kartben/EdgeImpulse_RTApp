@@ -88,16 +88,7 @@ __attribute__((weak)) void ei_printf_float(float f)
     ei_printf("%f", f);
 }
 
-#ifdef __cplusplus
-extern "C"
+__attribute__((weak)) void DebugLog(const char *s)
 {
-#endif
-
-    __attribute__((weak)) void DebugLog(const char *s)
-    {
-        ei_printf("%s", s);
-    }
-
-#ifdef __cplusplus
+    ei_printf("%s", s);
 }
-#endif

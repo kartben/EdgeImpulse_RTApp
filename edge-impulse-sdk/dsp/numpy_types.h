@@ -235,10 +235,6 @@ typedef struct ei_signal_t {
      * @param length The total length of the signal
      * @param out_ptr An out buffer to set the signal data
      */
-
-#define EIDSP_SIGNAL_C_FN_POINTER    1
-
-
 #if EIDSP_SIGNAL_C_FN_POINTER == 1
     int (*get_data)(size_t, size_t, float *);
 #else

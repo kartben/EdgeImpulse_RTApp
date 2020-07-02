@@ -24,18 +24,14 @@
 
 #include "edge-impulse-sdk/tensorflow/lite/micro/kernels/micro_ops.h"
 
-#define EI_TFLITE_RESOLVER tflite::MicroOpResolver<4> resolver; \
+#define EI_TFLITE_RESOLVER tflite::MicroMutableOpResolver<4> resolver; \
     resolver.AddBuiltin(tflite::BuiltinOperator_ADD, \
-        tflite::ops::micro::Register_ADD(), \
-        tflite::MicroOpResolverAnyVersion()); \
+        tflite::ops::micro::Register_ADD()); \
     resolver.AddBuiltin(tflite::BuiltinOperator_FULLY_CONNECTED, \
-        tflite::ops::micro::Register_FULLY_CONNECTED(), \
-        tflite::MicroOpResolverAnyVersion()); \
+        tflite::ops::micro::Register_FULLY_CONNECTED()); \
     resolver.AddBuiltin(tflite::BuiltinOperator_RESHAPE, \
-        tflite::ops::micro::Register_RESHAPE(), \
-        tflite::MicroOpResolverAnyVersion()); \
+        tflite::ops::micro::Register_RESHAPE()); \
     resolver.AddBuiltin(tflite::BuiltinOperator_SOFTMAX, \
-        tflite::ops::micro::Register_SOFTMAX(), \
-        tflite::MicroOpResolverAnyVersion());
+        tflite::ops::micro::Register_SOFTMAX());
 
 #endif // _EI_CLASSIFIER_TFLITE_RESOLVER_H_

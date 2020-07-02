@@ -39,6 +39,7 @@ target_include_directories(
     PUBLIC
 		${CMAKE_SOURCE_DIR}/.
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk 
+		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/dsp
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/classifier
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/CMSIS/Core/Include
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/CMSIS/DSP/Include
@@ -53,8 +54,9 @@ target_include_directories(
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/CMSIS/DSP/PrivateInclude
 ) 
 
-# target_compile_definitions(edgeimpulse PRIVATE EIDSP_USE_CMSIS_DSP=1)
-# target_compile_definitions(edgeimpulse PRIVATE EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=1)
+target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_USE_CMSIS_DSP=1)
+target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_SIGNAL_C_FN_POINTER=1)
+target_compile_definitions(edgeimpulse 	PUBLIC	EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=1)
 
 add_library(edgeimpulse_azsphere
 	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/debug_log.cc

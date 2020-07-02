@@ -27,7 +27,13 @@
 #include "edge-impulse-sdk/dsp/spectral/spectral.hpp"
 #include "edge-impulse-sdk/dsp/speechpy/speechpy.hpp"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 extern void ei_printf(const char *format, ...);
+#ifdef __cplusplus
+ }
+#endif
 
 #ifdef __cplusplus
 namespace {

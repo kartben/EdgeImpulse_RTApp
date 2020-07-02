@@ -10,15 +10,13 @@
 #include "CPUFreq.h"
 #include "VectorTable.h"
 
-
-#include "NVIC.h"
 #include "UART.h"
-#include "Print.h"
+#include "GPT.h"
 // --------------------
 
-#include "dsp/numpy_types.h"
+#include "dsp/config.hpp"
+#include "numpy_types.h"
 #include "ei_classifier_porting.h"
-#include "edge-impulse-sdk/porting/azure_sphere/ei_classifier_porting.cpp" /// meh!
 #include "ei_classifier_types.h"
 
 extern uint32_t StackTop; // &StackTop == end of TCM0

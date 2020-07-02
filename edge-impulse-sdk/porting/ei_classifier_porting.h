@@ -24,7 +24,10 @@
 #define _EI_CLASSIFIER_PORTING_H_
 
 #include <stdint.h>
-#include "tensorflow/lite/micro/debug_log.h"
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
     EI_IMPULSE_OK = 0,
@@ -68,5 +71,9 @@ void ei_printf(const char *format, ...);
  * If not overriden, this will be sent through `ei_printf()`.
  */
 void ei_printf_float(float f);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif // _EI_CLASSIFIER_PORTING_H_

@@ -57,8 +57,6 @@ typedef struct {
 typedef struct {
     int axes;
     const char * channels;
-    int width;
-    int height;
 } ei_dsp_config_image_t;
 
 typedef struct {

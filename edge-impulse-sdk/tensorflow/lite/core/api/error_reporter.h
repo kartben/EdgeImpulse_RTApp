@@ -15,7 +15,7 @@ limitations under the License.
 #ifndef TENSORFLOW_LITE_CORE_API_ERROR_REPORTER_H_
 #define TENSORFLOW_LITE_CORE_API_ERROR_REPORTER_H_
 
-#include <cstdarg> 
+#include <cstdarg>
 
 namespace tflite {
 
