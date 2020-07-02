@@ -1,0 +1,9 @@
+{
+  "SchemaVersion": 1,
+  "Name": "tftest_RTApp_MT3620_BareMetal",
+  "ComponentId": "CB69E304-245A-4DD3-B598-2CB68CA9B9EF",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {},
+  "ApplicationType": "RealTimeCapable"
+}
