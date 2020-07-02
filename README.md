@@ -4,7 +4,7 @@ This application is an example of Edge Impulse running on an Azure Sphere's RTCo
 
 Note: Compile the RTApp in Release configuration so it fits in memory. It seems that only a few tweaks would be needed to actually fit in memory, but that exercise is left to the reader!
 
-Place the <b>AzureSphereRTCoreToolchainCXX.cmake</b> into the <b>C:\Program Files (x86)\Microsoft Azure Sphere SDK\CMakeFiles </b>
+Place the `AzureSphereRTCoreToolchainCandCXX.cmake` into the `C:\Program Files (x86)\Microsoft Azure Sphere SDK\CMakeFiles`</b>
 directory or as appropriate for your Azure Sphere SDK installation.
 
 ## Prerequisites
