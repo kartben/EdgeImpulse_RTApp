@@ -57,6 +57,7 @@ target_include_directories(
 target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_USE_CMSIS_DSP=1)
 target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_SIGNAL_C_FN_POINTER=1)
 target_compile_definitions(edgeimpulse 	PUBLIC	EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=1)
+target_compile_definitions(edgeimpulse 	PUBLIC	TF_LITE_STATIC_MEMORY>)
 
 add_library(edgeimpulse_azsphere
 	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/debug_log.cc
