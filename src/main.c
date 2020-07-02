@@ -26,6 +26,7 @@ GPT *timer;
 
 EI_IMPULSE_ERROR run_classifier(signal_t *, ei_impulse_result_t *, bool);
 
+// examples features for testing the alcohol/spirit detection impulse
 static const float features[] = {
 // ambient 
 // 745, 196, 139, 56, 745, 195, 140, 56, 745, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56, 744, 196, 139, 56, 745, 196, 139, 56, 745, 196, 139, 56
@@ -33,16 +34,6 @@ static const float features[] = {
 759, 205, 622, 191, 760, 204, 620, 189, 760, 204, 619, 188, 759, 204, 618, 187, 759, 204, 617, 186, 760, 204, 616, 185, 760, 204, 614, 182, 760, 204, 613, 180, 759, 203, 612, 179, 760, 203, 611, 176, 759, 203, 609, 175, 760, 202, 608, 174
 };
 
-/**
- * @brief      Copy raw feature data in out_ptr
- *             Function called by inference library
- *
- * @param[in]  offset   The offset
- * @param[in]  length   The length
- * @param      out_ptr  The out pointer
- *
- * @return     0
- */
 int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
 {
     memcpy(out_ptr, features + offset, length * sizeof(float));
@@ -54,9 +45,11 @@ _Noreturn void RTCoreMain(void)
     VectorTableInit();
     CPUFreq_Set(26000000);
 
+    // Init debug UART
     uart = UART_Open(MT3620_UNIT_UART_DEBUG, 115200, UART_PARITY_NONE, 1, NULL);
 
     int32_t error;
+    // Init and start GPT3 timer (microsecond resolution)
     if(timer == NULL) {
         timer = GPT_Open(MT3620_UNIT_GPT3, 1000000, GPT_MODE_NONE);
         if (!timer) {

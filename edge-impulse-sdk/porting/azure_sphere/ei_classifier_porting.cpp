@@ -43,6 +43,9 @@ extern "C"
 
 #include "../ei_classifier_porting.h"
 
+// IMPORTANT: the Azure Sphere porting layer assumes that an UART dedicated to logging, 
+// as well as a free-running timer (for time reference) have been initialized and opened 
+// in the client application.
 extern UART *uart;
 extern GPT *timer;
 
