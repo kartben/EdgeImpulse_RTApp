@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#include "tensorflow/lite/micro/debug_log.h"
+//#include "tensorflow/lite/micro/debug_log.h"
 #include "../ei_classifier_porting.h"
 
 extern "C" void DebugLog(const char* s) {

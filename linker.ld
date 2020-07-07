@@ -1,3 +1,10 @@
+/**
+ * This code is based on a sample from Microsoft (see license below),
+ * with modifications made by MediaTek.
+ * Modified version of linker.ld from Microsoft Azure Sphere sample code:
+ * https://github.com/Azure/azure-sphere-samples/blob/master/Samples/HelloWorld/HelloWorld_RTApp_MT3620_BareMetal/linker.ld
+ **/
+
 /* Copyright (c) Microsoft Corporation. All rights reserved.
    Licensed under the MIT License. */
 
@@ -14,11 +21,11 @@ MEMORY
    about which types of memory which are available to real-time capable applications on the
    MT3620, and when they should be used. */
 REGION_ALIAS("CODE_REGION", TCM);
-REGION_ALIAS("RODATA_REGION", FLASH);
+REGION_ALIAS("RODATA_REGION", TCM);
 REGION_ALIAS("DATA_REGION", TCM);
 REGION_ALIAS("BSS_REGION", TCM);
 
-ENTRY(ExceptionVectorTable)
+ENTRY(__isr_vector)
 
 SECTIONS
 {
@@ -31,59 +38,22 @@ SECTIONS
     .text : ALIGN(32) {
         KEEP(*(.vector_table))
         *(.text)
-        *(.text*)
-
-        /* These are the C++ global constructors.  Stick them all here and
-         * then walk through the array in main() calling them all.
-         */
-        _init_array_start = .;
-        KEEP (*(SORT(.init_array*)))
-        _init_array_end = .;
-
-        . = ALIGN(4);
-        _etext = .;
     } >CODE_REGION
-
-    .ARM.extab :
-    {
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } >CODE_REGION
-
-    __exidx_start = .;
-    .ARM.exidx :
-    {
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } >CODE_REGION
-    __exidx_end = .;
 
     .rodata : {
         *(.rodata)
-        *(.rodata*)
     } >RODATA_REGION
 
     .data : {
-        . = ALIGN(4);
-        _sdata = .;
         *(.data)
-        *(.data*)
-        . = ALIGN(4);
-        _edata = .;
     } >DATA_REGION
 
     .bss : {
-        . = ALIGN(4);
-        _sbss = .;
         *(.bss)
-        *(.bss*)
-        *(COMMON)
-        . = ALIGN(4);
-        _ebss = .;
     } >BSS_REGION
 
-    /* Add this to satisfy reference to symbol 'end' from libnosys.a(sbrk.o)
-     * to denote the HEAP start.
-     */
-    end = .;
+	  . = ALIGN(4);
+  	end = . ;
 
     StackTop = ORIGIN(TCM) + LENGTH(TCM);
 }

@@ -3,10 +3,15 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
 
-PROJECT(EdgeImpulse_RTApp)
+PROJECT(EdgeImpulse_RTApp C CXX ASM)
+
+SET(CMAKE_ASM_FLAGS "-mcpu=cortex-m4")
 
 azsphere_configure_tools(TOOLS_REVISION "20.04")
 azsphere_configure_api(TARGET_API_SET "5+Beta2004") 
+
+ADD_COMPILE_DEFINITIONS(OSAI_BARE_METAL)
+ADD_LINK_OPTIONS(-specs=nano.specs -specs=nosys.specs)
 
 file(GLOB edge_impulse_sdk_SRC
 	edge-impulse-sdk/classifier/*.cpp
@@ -32,7 +37,9 @@ add_library(edgeimpulse OBJECT
 	${cmsis_SRC}
 )
 
-add_subdirectory(lib/mt3620-m4-drivers)
+
+add_subdirectory(lib/mt3620_lib)
+#add_subdirectory(lib/mt3620-m4-drivers)
 
 target_include_directories(
 	edgeimpulse
@@ -54,26 +61,36 @@ target_include_directories(
 		${CMAKE_SOURCE_DIR}/edge-impulse-sdk/CMSIS/DSP/PrivateInclude
 ) 
 
-target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_USE_CMSIS_DSP=1)
+target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_USE_CMSIS_DSP=0)
 target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_SIGNAL_C_FN_POINTER=1)
-target_compile_definitions(edgeimpulse 	PUBLIC	EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=1)
-target_compile_definitions(edgeimpulse 	PUBLIC	TF_LITE_STATIC_MEMORY>)
+target_compile_definitions(edgeimpulse 	PUBLIC	EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=0)
+target_compile_definitions(edgeimpulse 	PUBLIC	TF_LITE_STATIC_MEMORY)
 
 add_library(edgeimpulse_azsphere
 	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/debug_log.cc
 	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/ei_classifier_porting.cpp
 )
-target_link_libraries(edgeimpulse_azsphere PUBLIC edgeimpulse PRIVATE mt3620)
+target_link_libraries(edgeimpulse_azsphere PUBLIC edgeimpulse PRIVATE mt3620_lib)
+
+set(THREADX_ARCH "cortex_m4")
+set(THREADX_TOOLCHAIN "gnu")
+add_subdirectory(threadx)
 
 # Create executable
 add_executable(${PROJECT_NAME} 
-	${CMAKE_SOURCE_DIR}/src/main.c
+#	${CMAKE_SOURCE_DIR}/src/main.c
+	${CMAKE_SOURCE_DIR}/src/demo_threadx.c
+	${CMAKE_SOURCE_DIR}/src/rtcoremain.c
+	${CMAKE_SOURCE_DIR}/src/tx_initialize_low_level.S
 	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/tensorflow/lite/c/common.c
 )
 
-target_link_libraries(${PROJECT_NAME} mt3620 edgeimpulse_azsphere nosys stdc++ supc++ m c gcc)
+target_link_libraries(${PROJECT_NAME} mt3620_lib MT3620_M4_Driver MT3620_M4_BSP)
+target_link_libraries(${PROJECT_NAME} azrtos::threadx) 
+target_link_libraries(${PROJECT_NAME} edgeimpulse_azsphere)
+#target_link_libraries(${PROJECT_NAME} nosys stdc++ supc++ m c gcc)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/linker.ld)
+set_target_properties (${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/linker.ld)
 
-# Add MakeImage post-build command
-include("${AZURE_SPHERE_MAKE_IMAGE_FILE}")
+azsphere_target_add_image_package(${PROJECT_NAME})
+

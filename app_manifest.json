@@ -1,9 +1,11 @@
 {
   "SchemaVersion": 1,
-  "Name": "tftest_RTApp_MT3620_BareMetal",
-  "ComponentId": "CB69E304-245A-4DD3-B598-2CB68CA9B9EF",
+  "Name": "edge_impulse_azrtos",
+  "ComponentId": "999cb882-e3ed-43d2-93d4-59369aeb6677",
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
-  "Capabilities": {},
+  "Capabilities": {
+    "Uart": [ "ISU0" ]
+  },
   "ApplicationType": "RealTimeCapable"
 }

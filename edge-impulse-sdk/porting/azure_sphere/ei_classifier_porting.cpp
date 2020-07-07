@@ -29,25 +29,19 @@ extern "C"
 {
 #endif
 
-#include "CPUFreq.h"
-#include "NVIC.h"
-#include "UART.h"
-#include "Print.h"
+// #include "CPUFreq.h"
+// #include "NVIC.h"
+// #include "UART.h"
+// #include "Print.h"
 
-#include "mt3620/gpt.h"
-#include "GPT.h"
+// #include "mt3620/gpt.h"
+// #include "GPT.h"
 
 #ifdef __cplusplus
 }
 #endif
 
 #include "../ei_classifier_porting.h"
-
-// IMPORTANT: the Azure Sphere porting layer assumes that an UART dedicated to logging, 
-// as well as a free-running timer (for time reference) have been initialized and opened 
-// in the client application.
-extern UART *uart;
-extern GPT *timer;
 
 #define EI_WEAK_FN __attribute__((weak))
 
@@ -58,31 +52,24 @@ EI_WEAK_FN EI_IMPULSE_ERROR ei_run_impulse_check_canceled()
 
 EI_WEAK_FN EI_IMPULSE_ERROR ei_sleep(int32_t time_ms)
 {
-    uint64_t micros = ei_read_timer_us();
- 
-    while (ei_read_timer_us() < (micros + time_ms * 1000))
-    {
-        // no-op
-    }
-
     return EI_IMPULSE_OK;
 }
 
 uint64_t ei_read_timer_ms()
 {
-    return GPT_GetRunningTime(timer, GPT_UNITS_MILLISEC);
+    return 0;
 }
 
 uint64_t ei_read_timer_us()
 {
-    return GPT_GetRunningTime(timer, GPT_UNITS_MICROSEC);
+    return 0;
 }
 
 __attribute__((weak)) void ei_printf(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
-    UART_vPrintf(uart, format, args);
+    //UART_vPrintf(uart, format, args);
     va_end(args);
 }
 

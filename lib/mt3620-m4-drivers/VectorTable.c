@@ -24,7 +24,7 @@ void __attribute__((weak, alias("DefaultExceptionHandler"))) BusFault(void);
 void __attribute__((weak, alias("DefaultExceptionHandler"))) UsageFault(void);
 void __attribute__((weak, alias("DefaultExceptionHandler"))) SVCall(void);
 void __attribute__((weak, alias("DefaultExceptionHandler"))) DebugMonitor(void);
-void __attribute__((weak, alias("DefaultExceptionHandler"))) PendSV(void);
+void __attribute__((weak, alias("DefaultExceptionHandler"))) PendSV_Handler(void);
 void __attribute__((weak, alias("DefaultExceptionHandler"))) SysTick(void);
 
 void __attribute__((weak, alias("DefaultExceptionHandler"))) wic_int_wake_up(void);
@@ -153,7 +153,7 @@ const void (*ExceptionVectorTable[])(void)
         [EXC(11)] = SVCall,
         [EXC(12)] = DebugMonitor,
         [EXC(13)] = NULL,
-        [EXC(14)] = PendSV,
+        [EXC(14)] = PendSV_Handler,
         [EXC(15)] = SysTick,
 
         [INT( 0)] = wic_int_wake_up,
