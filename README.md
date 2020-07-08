@@ -1,6 +1,23 @@
-﻿# Edge Impulse on Azure Sphere
+﻿# Edge Impulse on Azure Sphere + Azure RTOS
 
-This application is an example of Edge Impulse running on an Azure Sphere's RTCore (Cortex-M4F).
+This application is an example of Edge Impulse running on Azure RTOS (ThreadX) on an Azure Sphere's RTCore (Cortex-M4F).
+
+## Structure of the Azure RTOS application
+
+The application has been designed to showcase how one can leverage a real-time OS such as [Azure RTOS](https://azure.microsoft.com/services/rtos/) to build a system that can safely and accurately sample sensor data at a fixed frequency while, at the same time, running a compute-heavy machine learning workload.
+
+The configuration of the application is derived from the parameters of the "impulse" that's been trained and exported from Edge Impulse. For example, the sampling thread will fire every `EI_CLASSIFIER_INTERVAL_MS` millisecond.
+
+The following Azure RTOS Threads services are being used:
+
+- [`thread_0`](src/demo_threadx.c#L90) is logging information about the system. It is running an infinite loop "logInfo() ; sleep(1s) ; logInfo() ; etc.".
+- `mutex_0` is a mutex used for providing mutually exclusive access to the `sensor_readings` buffer used for storing sensor data.
+- [`timer_0`](src/demo_threadx.c#L157) is firing every `EI_CLASSIFIER_INTERVAL_MS` millisecond and putting random/simulated data in a `sensor_readings` buffer.
+- [`thread_1`](src/demo_threadx.c#L116) is running the Edge Impulse classifier using the `sensor_readings` buffer. It captures a copy of this buffer just before running the impulse, using `mutex_0` to guarantee safe access to the buffer.
+
+What's more, since Edge Impulse relies on libraries that dynamically allocate memory, a wrapper (see [`malloc_threadx.h`](src/malloc_threadx.h)) that redefines the `malloc()`/`calloc()`/`free()` primitives has been added. It uses ThreadX's byte pool APIs and, by default, reserves 40KB in the byte pool.
+
+## Getting started
 
 Place the `AzureSphereRTCoreToolchainCandCXX.cmake` into the `C:\Program Files (x86)\Microsoft Azure Sphere SDK\CMakeFiles` directory or as appropriate for your Azure Sphere SDK installation.
 

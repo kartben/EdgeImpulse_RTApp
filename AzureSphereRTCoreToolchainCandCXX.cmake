@@ -48,7 +48,7 @@ ENDIF()
 
 SET(CMAKE_C_FLAGS_INIT "-mcpu=cortex-m4 -mfloat-abi=soft -march=armv7e-m -mthumb")
 SET(CMAKE_CXX_FLAGS_INIT "-mcpu=cortex-m4 -mfloat-abi=soft -march=armv7e-m -mthumb")
-SET(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs --specs=nano.specs -nostartfiles -Wl,--no-undefined -Wl,-n -Wl,--allow-multiple-definition -Wl,--verbose -T \"${CMAKE_SOURCE_DIR}/linker.ld\"")
+SET(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nano.specs --specs=nosys.specs -nostartfiles -Wl,--no-undefined -Wl,-n -Wl,--allow-multiple-definition -Wl,--verbose -T \"${CMAKE_SOURCE_DIR}/linker.ld\"")
 
 FILE(GLOB ARM_GNU_INCLUDE_PATH "${ARM_GNU_BASE_PATH}/lib/gcc/arm-none-eabi/*/include")
 SET(CMAKE_C_STANDARD_INCLUDE_DIRECTORIES "${ARM_GNU_INCLUDE_PATH}" "${ARM_GNU_BASE_PATH}/arm-none-eabi/include")
@@ -76,4 +76,3 @@ ADD_COMPILE_OPTIONS($<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>)
 
 ADD_COMPILE_OPTIONS(${COMPILE_DEBUG_FLAGS})
 ADD_COMPILE_OPTIONS(${COMPILE_RELEASE_FLAGS})
-

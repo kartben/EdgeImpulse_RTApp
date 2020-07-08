@@ -11,7 +11,6 @@ azsphere_configure_tools(TOOLS_REVISION "20.04")
 azsphere_configure_api(TARGET_API_SET "5+Beta2004") 
 
 ADD_COMPILE_DEFINITIONS(OSAI_BARE_METAL)
-ADD_LINK_OPTIONS(-specs=nano.specs -specs=nosys.specs)
 
 file(GLOB edge_impulse_sdk_SRC
 	edge-impulse-sdk/classifier/*.cpp
@@ -39,7 +38,6 @@ add_library(edgeimpulse OBJECT
 
 
 add_subdirectory(lib/mt3620_lib)
-#add_subdirectory(lib/mt3620-m4-drivers)
 
 target_include_directories(
 	edgeimpulse
@@ -66,19 +64,20 @@ target_compile_definitions(edgeimpulse 	PUBLIC	EIDSP_SIGNAL_C_FN_POINTER=1)
 target_compile_definitions(edgeimpulse 	PUBLIC	EI_CLASSIFIER_TFLITE_ENABLE_CMSIS_NN=0)
 target_compile_definitions(edgeimpulse 	PUBLIC	TF_LITE_STATIC_MEMORY)
 
-add_library(edgeimpulse_azsphere
-	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/debug_log.cc
-	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/azure_sphere/ei_classifier_porting.cpp
+add_library(edgeimpulse_threadx
+	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/threadx/debug_log.cc
+	${CMAKE_SOURCE_DIR}/edge-impulse-sdk/porting/threadx/ei_classifier_porting.cpp
 )
-target_link_libraries(edgeimpulse_azsphere PUBLIC edgeimpulse PRIVATE mt3620_lib)
+target_link_libraries(edgeimpulse_threadx PUBLIC edgeimpulse PRIVATE azrtos::threadx mt3620_lib)
 
 set(THREADX_ARCH "cortex_m4")
 set(THREADX_TOOLCHAIN "gnu")
 add_subdirectory(threadx)
 
+target_compile_definitions(threadx	PUBLIC 	TX_TIMER_TICKS_PER_SECOND=1000)
+
 # Create executable
 add_executable(${PROJECT_NAME} 
-#	${CMAKE_SOURCE_DIR}/src/main.c
 	${CMAKE_SOURCE_DIR}/src/demo_threadx.c
 	${CMAKE_SOURCE_DIR}/src/rtcoremain.c
 	${CMAKE_SOURCE_DIR}/src/tx_initialize_low_level.S
@@ -86,8 +85,8 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} mt3620_lib MT3620_M4_Driver MT3620_M4_BSP)
+target_link_libraries(${PROJECT_NAME} edgeimpulse_threadx)
 target_link_libraries(${PROJECT_NAME} azrtos::threadx) 
-target_link_libraries(${PROJECT_NAME} edgeimpulse_azsphere)
 #target_link_libraries(${PROJECT_NAME} nosys stdc++ supc++ m c gcc)
 
 set_target_properties (${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/linker.ld)

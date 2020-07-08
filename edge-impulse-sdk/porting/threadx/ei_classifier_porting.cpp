@@ -29,13 +29,7 @@ extern "C"
 {
 #endif
 
-// #include "CPUFreq.h"
-// #include "NVIC.h"
-// #include "UART.h"
-// #include "Print.h"
-
-// #include "mt3620/gpt.h"
-// #include "GPT.h"
+#include "tx_api.h"
 
 #ifdef __cplusplus
 }
@@ -52,24 +46,25 @@ EI_WEAK_FN EI_IMPULSE_ERROR ei_run_impulse_check_canceled()
 
 EI_WEAK_FN EI_IMPULSE_ERROR ei_sleep(int32_t time_ms)
 {
+    tx_thread_sleep(time_ms);
     return EI_IMPULSE_OK;
 }
 
 uint64_t ei_read_timer_ms()
 {
-    return 0;
+    return tx_time_get();
 }
 
 uint64_t ei_read_timer_us()
 {
-    return 0;
+    return tx_time_get() * 1000;
 }
 
 __attribute__((weak)) void ei_printf(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
-    //UART_vPrintf(uart, format, args);
+    vprintf(format, args);
     va_end(args);
 }
 
